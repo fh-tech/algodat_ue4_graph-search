@@ -4,20 +4,20 @@ import com.fhtech.algue4.Station;
 import com.fhtech.algue4.graph.Graph;
 import com.fhtech.algue4.graph.LineSegment;
 import com.fhtech.algue4.graph.StationNode;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class Djikstra {
 
     private static HashMap<Station, LineSegment> previous = new HashMap<Station, LineSegment>();
     private static HashMap<Station, Integer> durations = new HashMap<Station, Integer>();
-    private static ArrayList<Station> unsettled_nodes = new ArrayList<Station>();
 
-    public static HashMap<Station, LineSegment> find_Shortest(Graph graph, Station from, Station to) {
-        ArrayList<Station> settled_nodes = new ArrayList<Station>();
+
+    public static @NotNull HashMap<Station, LineSegment> find_Shortest(Graph graph, Station from, Station to) {
+        //sets because they need to be unique
+        HashSet<Station> unsettled_nodes = new HashSet<Station>();
+        HashSet<Station> settled_nodes = new HashSet<Station>();
         //add source to unsettled_nodes
         unsettled_nodes.add(from);
         // init path
@@ -53,6 +53,11 @@ public class Djikstra {
         return previous;
     }
 
+    /**
+     * prints the shortest path from station to station
+     * @param previous result of find_shortest Map<Station, LineSegment>
+     * @param to station to reach
+     */
     public static void printPath(HashMap<Station, LineSegment> previous, Station to) {
         String path = "";
         Stack<LineSegment> reversed_path = reversePath(previous, to);
@@ -70,9 +75,11 @@ public class Djikstra {
     }
 
 
-    private static StationNode getLowestDurationNode(ArrayList<Station> unsettled_nodes, Graph graph) {
+
+    // can return null?
+    private static StationNode getLowestDurationNode(@NotNull HashSet<Station> unsettled_nodes, @NotNull Graph graph) {
         // if the size is 1 we can return the Node
-        if (unsettled_nodes.size() == 1) return graph.getStationNode(unsettled_nodes.get(0));
+//        if (unsettled_nodes.size() == 1) return graph.getStationNode(unsettled_nodes.get(0));
 
         StationNode lowestDurationNode = null;
         int lowestDuration = Integer.MAX_VALUE;
@@ -91,7 +98,7 @@ public class Djikstra {
         return lowestDurationNode;
     }
 
-    private static Stack<LineSegment> reversePath(HashMap<Station, LineSegment> previous, Station to) {
+    private static @NotNull Stack<LineSegment> reversePath(@NotNull HashMap<Station, LineSegment> previous, @NotNull Station to) {
         // last segment is null because there is no previous if you reached the start
         Stack<LineSegment> reversed = new Stack<LineSegment>();
         LineSegment current = previous.get(to);

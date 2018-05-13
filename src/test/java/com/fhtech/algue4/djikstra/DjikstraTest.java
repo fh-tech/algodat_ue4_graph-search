@@ -97,14 +97,11 @@ public class DjikstraTest {
                 if ("Leopoldau".equals(station.getStationName())) from = station;
             }
             if (to == null) {
-                if ("Kagran".equals(station.getStationName())) to = station;
+                if ("Bruennlbadgasse".equals(station.getStationName())) to = station;
             }
         }
 
         HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
         Djikstra.printPath(shortest, to);
     }
-
-
-
 }
