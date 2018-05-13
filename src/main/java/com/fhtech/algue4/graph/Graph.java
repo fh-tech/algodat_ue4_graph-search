@@ -4,8 +4,7 @@ import com.fhtech.algue4.Line;
 import com.fhtech.algue4.Station;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,13 +14,24 @@ public class Graph {
 
     private HashMap<Station, StationNode> stations = new HashMap<>();
 
-    public StationNode addStation(Station station){
-        return stations.computeIfAbsent(station,
-                (s) -> new StationNode(station, new HashSet<>()));
+    private void addLineSegmentUniDirectional(LineSegment lineSegment){
+        stations.computeIfAbsent(lineSegment.getPrev(),
+                (s) -> new StationNode(lineSegment.getPrev(),
+                        Stream.of(lineSegment).collect(Collectors.toSet())))
+                .addSegment(lineSegment);
+    }
+
+    public Set<Station> get_stations() {
+        return stations.keySet();
     }
 
     public StationNode getStationNode(Station station) {
         return stations.get(station);
+    }
+
+    public StationNode addStation(Station station){
+        return stations.computeIfAbsent(station,
+                (s) -> new StationNode(station, new HashSet<>()));
     }
 
     public int size(){
@@ -40,11 +50,6 @@ public class Graph {
         addLineSegmentUniDirectional(reverse);
     }
 
-    private void addLineSegmentUniDirectional(LineSegment lineSegment){
-        stations.computeIfAbsent(lineSegment.getPrev(),
-                (s) -> new StationNode(lineSegment.getPrev(),
-                        Stream.of(lineSegment).collect(Collectors.toSet())))
-                .addSegment(lineSegment);
-    }
+
 
 }

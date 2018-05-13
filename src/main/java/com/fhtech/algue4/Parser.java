@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class Parser {
 
-    @NotNull Graph readFile(@NotNull InputStream ins) {
+    public @NotNull Graph readFile(@NotNull InputStream ins) {
         LineNumberReader rdr = new LineNumberReader(new InputStreamReader(ins));
         return rdr.lines()
                 .map(this::parseTransportLine)
