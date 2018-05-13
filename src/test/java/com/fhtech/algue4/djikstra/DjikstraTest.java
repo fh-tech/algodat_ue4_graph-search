@@ -46,9 +46,9 @@ public class DjikstraTest {
     }
 
     @Test
-    void testReal() {
+    void test_Short_1Line() {
         Parser p = new Parser();
-        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        Graph g = p.readFile(getClass().getResourceAsStream("/short_stations.txt"));
         Station from = null, to = null;
 //            have to select start and stop from available stations!
         Set<Station> all_stations = g.get_stations();
@@ -63,8 +63,48 @@ public class DjikstraTest {
 
         HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
         Djikstra.printPath(shortest, to);
-
     }
+
+    @Test
+    void test_Short_U1_U2() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/short_stations.txt"));
+        Station from = null, to = null;
+//            have to select start and stop from available stations!
+        Set<Station> all_stations = g.get_stations();
+        for (Station station : all_stations) {
+            if (from == null) {
+                if ("Leopoldau".equals(station.getStationName())) from = station;
+            }
+            if (to == null) {
+                if ("Volkstheater".equals(station.getStationName())) to = station;
+            }
+        }
+
+        HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
+        Djikstra.printPath(shortest, to);
+    }
+
+    @Test
+    void test_Real() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        Station from = null, to = null;
+//            have to select start and stop from available stations!
+        Set<Station> all_stations = g.get_stations();
+        for (Station station : all_stations) {
+            if (from == null) {
+                if ("Leopoldau".equals(station.getStationName())) from = station;
+            }
+            if (to == null) {
+                if ("Kagran".equals(station.getStationName())) to = station;
+            }
+        }
+
+        HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
+        Djikstra.printPath(shortest, to);
+    }
+
 
 
 }

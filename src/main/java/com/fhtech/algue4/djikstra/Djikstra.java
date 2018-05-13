@@ -25,9 +25,8 @@ public class Djikstra {
         previous.put(from, null);
 
         //first last is the startNode after that it is the node with the shortest distance from that
-        StationNode last = graph.getStationNode(from);
         while (unsettled_nodes.size() != 0) {
-            StationNode currentNode = getLowestDurationNode(unsettled_nodes, graph, last);
+            StationNode currentNode = getLowestDurationNode(unsettled_nodes, graph);
             unsettled_nodes.remove(currentNode.getStation());
             for (LineSegment edge : currentNode.getConnectedSegments()) {
                 Station adjacentStation = edge.getNext();
@@ -50,8 +49,6 @@ public class Djikstra {
                 }
             }
             settled_nodes.add(currentNode.getStation());
-            // set current to be last so currentNode is selected based on that
-            last = currentNode;
         }
         return previous;
     }
@@ -73,15 +70,7 @@ public class Djikstra {
     }
 
 
-    /**
-     *
-     * @param unsettled_nodes
-     * @param graph
-     * @param current
-     * @return if no path to the node found returns null otherwise the node with the shortest distance from the current node but wait that should not be possible
-     */
-    private static StationNode getLowestDurationNode(ArrayList<Station> unsettled_nodes, Graph
-            graph, StationNode current) {
+    private static StationNode getLowestDurationNode(ArrayList<Station> unsettled_nodes, Graph graph) {
         // if the size is 1 we can return the Node
         if (unsettled_nodes.size() == 1) return graph.getStationNode(unsettled_nodes.get(0));
 
@@ -93,11 +82,9 @@ public class Djikstra {
             for (LineSegment edge : node.getConnectedSegments()) {
                 Station next = edge.getNext();
                 // check if there is a way from the unsettled node back to our current! (next because we have a directed graph, previous on the edge would be the station itself)
-                if (graph.getStationNode(next) == current) {
-                    if (edge.getDuration() < lowestDuration) {
-                        lowestDuration = edge.getDuration();
-                        lowestDurationNode = node;
-                    }
+                if (edge.getDuration() < lowestDuration) {
+                    lowestDuration = edge.getDuration();
+                    lowestDurationNode = node;
                 }
             }
         }
