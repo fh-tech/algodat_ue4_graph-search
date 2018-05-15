@@ -2,7 +2,8 @@ We chose to use a directed graph although not required for the test data for the
 1) easier to expand
 2) easier to program (logic wise)
 
-
+As the graph is "licht" we chose to use a adjacency list instead of adjacency matrix because the matrix would take way more space
+For dichte or vollständige graphen wäre adjacency matrix besser weil man dann speicherplatz abkoppelt von kantenmenge (nur abhängig von knotenzahl)
 
 Data Structures:
 - Graph
