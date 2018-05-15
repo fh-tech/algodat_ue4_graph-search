@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DjikstraTest {
@@ -58,7 +54,7 @@ public class DjikstraTest {
 
         assertEquals(station_names_expected.length, station_names_real.size());
         for(int i = 0; i < station_names_expected.length; i++) {
-            assertEquals(station_names_expected[i], station_names_real.indexOf(i));
+            assertEquals(station_names_expected[i], station_names_real.get(i));
         }
     }
 
@@ -89,7 +85,7 @@ public class DjikstraTest {
 
         assertEquals(station_names_expected.length, station_names_real.size());
         for(int i = 0; i < station_names_expected.length; i++) {
-            assertEquals(station_names_expected[i], station_names_real.indexOf(i));
+            assertEquals(station_names_expected[i], station_names_real.get(i));
         }
     }
 
