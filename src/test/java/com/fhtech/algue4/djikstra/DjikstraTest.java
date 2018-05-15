@@ -6,7 +6,9 @@ import com.fhtech.algue4.graph.Graph;
 import com.fhtech.algue4.graph.LineSegment;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,20 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DjikstraTest {
+
+
+    ArrayList<String> extract_stationNames(HashMap<Station, LineSegment> djikstra_result, Station to, Station from) {
+        ArrayList<String> station_names = new ArrayList<String>();
+        LineSegment current = djikstra_result.get(to);
+        int i = 0;
+        while (current != null) {
+            Station last = current.getPrev();
+            station_names.add(current.getNext().getStationName());
+            current = djikstra_result.get(last);
+        }
+        station_names.add(from.getStationName());
+        return station_names;
+    }
 
 
     @Test
@@ -33,75 +49,49 @@ public class DjikstraTest {
             }
         }
 
-        HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
-        Djikstra.printPath(shortest, to);
+        Djikstra djikstra = new Djikstra(g);
+        HashMap<Station, LineSegment> result = djikstra.find_Shortest(from, to);
+        djikstra.printPath(result, to);
 
-        LineSegment last = shortest.get(to);
-        Station last_station = last.getPrev();
-        assertEquals("Wipfing", last_station.getStationName());
+        String[] station_names_expected = {"Tulln", "Wipfing", "Zeiselmauer"};
+        ArrayList<String> station_names_real = extract_stationNames(result, to, from);
 
-        LineSegment lastlast = shortest.get(last_station);
-        Station lastlast_station = lastlast.getPrev();
-        assertEquals("Zeiselmauer", lastlast_station.getStationName());
+        assertEquals(station_names_expected.length, station_names_real.size());
+        for(int i = 0; i < station_names_expected.length; i++) {
+            assertEquals(station_names_expected[i], station_names_real.indexOf(i));
+        }
     }
 
     @Test
-    void test_Short_1Line() {
+    void test_drive_reversed() {
         Parser p = new Parser();
-        Graph g = p.readFile(getClass().getResourceAsStream("/short_stations.txt"));
+        Graph g = p.readFile(getClass().getResourceAsStream("/vik_test.txt"));
+        //have to select start and stop from available stations!
         Station from = null, to = null;
-//            have to select start and stop from available stations!
+
         Set<Station> all_stations = g.get_stations();
         for (Station station : all_stations) {
             if (from == null) {
-                if ("Leopoldau".equals(station.getStationName())) from = station;
+                if ("Wipfing".equals(station.getStationName())) from = station;
             }
             if (to == null) {
-                if ("Keplerplatz".equals(station.getStationName())) to = station;
+                if ("Langenlebarn".equals(station.getStationName())) to = station;
             }
         }
 
-        HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
-        Djikstra.printPath(shortest, to);
-    }
+        // execute djikstra
+        Djikstra djikstra = new Djikstra(g);
+        HashMap<Station, LineSegment> result = djikstra.find_Shortest(from, to);
+        djikstra.printPath(result, to);
 
-    @Test
-    void test_Short_U1_U2() {
-        Parser p = new Parser();
-        Graph g = p.readFile(getClass().getResourceAsStream("/short_stations.txt"));
-        Station from = null, to = null;
-//            have to select start and stop from available stations!
-        Set<Station> all_stations = g.get_stations();
-        for (Station station : all_stations) {
-            if (from == null) {
-                if ("Leopoldau".equals(station.getStationName())) from = station;
-            }
-            if (to == null) {
-                if ("Volkstheater".equals(station.getStationName())) to = station;
-            }
+        String[] station_names_expected = {"Langenlebarn", "Muckendorf", "Zeiselmauer", "Wipfing"};
+        ArrayList<String> station_names_real = extract_stationNames(result, to, from);
+
+        assertEquals(station_names_expected.length, station_names_real.size());
+        for(int i = 0; i < station_names_expected.length; i++) {
+            assertEquals(station_names_expected[i], station_names_real.indexOf(i));
         }
-
-        HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
-        Djikstra.printPath(shortest, to);
     }
 
-    @Test
-    void test_Real() {
-        Parser p = new Parser();
-        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
-        Station from = null, to = null;
-//            have to select start and stop from available stations!
-        Set<Station> all_stations = g.get_stations();
-        for (Station station : all_stations) {
-            if (from == null) {
-                if ("Leopoldau".equals(station.getStationName())) from = station;
-            }
-            if (to == null) {
-                if ("Bruennlbadgasse".equals(station.getStationName())) to = station;
-            }
-        }
 
-        HashMap<Station, LineSegment> shortest = Djikstra.find_Shortest(g, from, to);
-        Djikstra.printPath(shortest, to);
-    }
 }
