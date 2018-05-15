@@ -10,50 +10,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DjikstraTest {
-
-
-    ArrayList<String> extract_stationNames(HashMap<Station, LineSegment> djikstra_result, Station to, Station from) {
-        ArrayList<String> station_names = new ArrayList<String>();
-        LineSegment current = djikstra_result.get(to);
-        int i = 0;
-        while (current != null) {
-            Station last = current.getPrev();
-            station_names.add(current.getNext().getStationName());
-            current = djikstra_result.get(last);
-        }
-        station_names.add(from.getStationName());
-        return station_names;
-    }
 
 
     @Test
     void testSimple() {
         Parser p = new Parser();
         Graph g = p.readFile(getClass().getResourceAsStream("/vik_test.txt"));
-        Station from = null, to = null;
 //            have to select start and stop from available stations!
-        Set<Station> all_stations = g.get_stations();
-        for (Station station : all_stations) {
-            if (from == null) {
-                if ("Zeiselmauer".equals(station.getStationName())) from = station;
-            }
-            if (to == null) {
-                if ("Tulln".equals(station.getStationName())) to = station;
-            }
-        }
+
+        Station from = new Station("Zeiselmauer");
+        Station to = new Station("Tulln");
 
         Djikstra djikstra = new Djikstra(g);
-        HashMap<Station, LineSegment> result = djikstra.find_Shortest(from, to);
+        List<LineSegment> result = djikstra.find_Shortest(from, to);
         djikstra.printPath(result, to);
 
-        String[] station_names_expected = {"Tulln", "Wipfing", "Zeiselmauer"};
-        ArrayList<String> station_names_real = extract_stationNames(result, to, from);
+
+        String[] station_names_expected = {"Zeiselmauer", "Wipfing", "Tulln"};
+        List<String> station_names_real = result
+                .stream()
+                .map((LineSegment l) -> l.getPrev().getStationName())
+                .collect(Collectors.toList());
+        station_names_real.add(result.get(result.size() - 1).getNext().getStationName());
+
 
         assertEquals(station_names_expected.length, station_names_real.size());
-        for(int i = 0; i < station_names_expected.length; i++) {
+        for (int i = 0; i < station_names_expected.length; i++) {
             assertEquals(station_names_expected[i], station_names_real.get(i));
         }
     }
@@ -63,30 +52,59 @@ public class DjikstraTest {
         Parser p = new Parser();
         Graph g = p.readFile(getClass().getResourceAsStream("/vik_test.txt"));
         //have to select start and stop from available stations!
-        Station from = null, to = null;
 
-        Set<Station> all_stations = g.get_stations();
-        for (Station station : all_stations) {
-            if (from == null) {
-                if ("Wipfing".equals(station.getStationName())) from = station;
-            }
-            if (to == null) {
-                if ("Langenlebarn".equals(station.getStationName())) to = station;
-            }
-        }
+        Station from = new Station("Wipfing");
+        Station to = new Station("Langenlebarn");
 
         // execute djikstra
         Djikstra djikstra = new Djikstra(g);
-        HashMap<Station, LineSegment> result = djikstra.find_Shortest(from, to);
+        List<LineSegment> result = djikstra.find_Shortest(from, to);
         djikstra.printPath(result, to);
 
-        String[] station_names_expected = {"Langenlebarn", "Muckendorf", "Zeiselmauer", "Wipfing"};
-        ArrayList<String> station_names_real = extract_stationNames(result, to, from);
+        String[] station_names_expected = {"Wipfing", "Zeiselmauer", "Muckendorf", "Langenlebarn"};
+        List<String> station_names_real = result
+                .stream()
+                .map((LineSegment l) -> l.getPrev().getStationName())
+                .collect(Collectors.toList());
+        station_names_real.add(result.get(result.size() - 1).getNext().getStationName());
+
 
         assertEquals(station_names_expected.length, station_names_real.size());
-        for(int i = 0; i < station_names_expected.length; i++) {
+        for (int i = 0; i < station_names_expected.length; i++) {
             assertEquals(station_names_expected[i], station_names_real.get(i));
         }
+    }
+
+    @Test
+    void test_no_path() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        //have to select start and stop from available stations!
+
+        Station from = new Station("Floridsdorf");
+        Station to = new Station("a");
+
+        // execute djikstra
+        Djikstra djikstra = new Djikstra(g);
+        List<LineSegment> result = djikstra.find_Shortest(from, to);
+        djikstra.printPath(result, to);
+
+        assertTrue(result.isEmpty());
+    }
+
+
+    @Test
+    void test_should_throw() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        //have to select start and stop from available stations!
+
+        Station from = new Station("Floridsdorf");
+        Station to = new Station("Floridsdorf");
+
+        // execute djikstra
+        Djikstra djikstra = new Djikstra(g);
+        assertThrows(IllegalArgumentException.class, () -> djikstra.find_Shortest(from, to));
     }
 
     //TODO: add test with isolated node
@@ -94,6 +112,5 @@ public class DjikstraTest {
     //TODO: add test with no path to the goal and check output
     //TODO: add complicated check for shortest path
     //TODO: add 5 minutes plus for when hop on hop off happens
-
 
 }

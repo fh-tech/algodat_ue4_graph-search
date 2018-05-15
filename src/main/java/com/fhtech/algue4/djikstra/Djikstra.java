@@ -7,21 +7,30 @@ import com.fhtech.algue4.graph.StationNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Djikstra {
 
     private Graph graph;
 
-    public Djikstra(Graph graph) {
+
+    public Djikstra(@NotNull Graph graph) {
         this.graph = graph;
     }
 
-    public @NotNull HashMap<Station, LineSegment> find_Shortest(Station from, Station to) {
-        HashMap<Station, LineSegment> previous = new HashMap<Station, LineSegment>();
-        HashMap<Station, Integer> durations = new HashMap<Station, Integer>();
+    /**
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    @NotNull List<LineSegment> find_Shortest(@NotNull Station from, @NotNull Station to) {
+        if (to.equals(from)) throw new IllegalArgumentException("to and from should not be equal!");
+        final HashMap<Station, LineSegment> previous = new HashMap<>();
+        final HashMap<Station, Integer> durations = new HashMap<>();
         //sets because they need to be unique
-        HashSet<Station> unsettled_nodes = new HashSet<Station>();
-        HashSet<Station> settled_nodes = new HashSet<Station>();
+        final HashSet<Station> unsettled_nodes = new HashSet<>();
+        final HashSet<Station> settled_nodes = new HashSet<>();
 
         //add source to unsettled_nodes
         unsettled_nodes.add(from);
@@ -31,14 +40,13 @@ public class Djikstra {
 
         //first last is the startNode after that it is the node with the shortest distance from that
         while (unsettled_nodes.size() != 0) {
-            // get node with lowest duration - important for djikstra
+            // get node with lowest duration - important for dijkstra
             StationNode currentNode = getLowestDurationNode(unsettled_nodes, durations);
             // remove this node
             unsettled_nodes.remove(currentNode.getStation());
 
             for (LineSegment edge : currentNode.getConnectedSegments()) {
                 Station adjacentStation = edge.getNext();
-
                 // only execute if not in settled_nodes otherwise we add nodes multiple times + updating duration here is unnecessary - cant be shorter (because in settled already shortest possible (because we are always take shortest duration unsettled node next)
                 if (!settled_nodes.contains(adjacentStation)) {
                     update_duration(currentNode.getStation(),adjacentStation, edge, durations, previous);
@@ -46,13 +54,20 @@ public class Djikstra {
                     unsettled_nodes.add(adjacentStation);
                 }
             }
-
             settled_nodes.add(currentNode.getStation());
         }
-        return previous;
+        return reversePath(previous, to);
     }
 
-    private void update_duration(Station current, Station adjacent, LineSegment edge, HashMap<Station, Integer> durations, HashMap<Station, LineSegment> previous) {
+    /**
+     *
+     * @param current
+     * @param adjacent
+     * @param edge
+     * @param durations
+     * @param previous
+     */
+    private void update_duration(@NotNull Station current, @NotNull Station adjacent, @NotNull LineSegment edge, @NotNull HashMap<Station, Integer> durations, @NotNull HashMap<Station, LineSegment> previous) {
         // actual duration to the current node
         int dur_current = durations.get(current);
         // actual duration to the adjacent node
@@ -60,32 +75,45 @@ public class Djikstra {
         // new duration to the adjacent node
         int new_dur = dur_current + edge.getDuration();
 
+        LineSegment prev = previous.get(edge.getPrev());
+        if(prev != null && !edge.getLine().equals(prev.getLine())) new_dur += 5;
         if (new_dur < dur_adjacent) {
             durations.put(adjacent, new_dur);
             previous.put(adjacent, edge);
         }
     }
 
-
-    public void printPath(HashMap<Station, LineSegment> previous, Station to) {
-        String path = "";
-        Stack<LineSegment> reversed_path = reversePath(previous, to);
-
-        while (reversed_path.size() > 0) {
-            LineSegment edge = reversed_path.pop();
-            path +=
-                    edge.getPrev().getStationName()
-                            + " ---" + edge.getLine().getName() + "("
-                            + edge.getDuration() + "min)--> ";
-
-            if (reversed_path.size() == 0) path += edge.getNext().getStationName();
+    /**
+     *
+     * @param path
+     * @param to
+     */
+    void printPath(@NotNull List<LineSegment> path, @NotNull Station to) {
+        int sum = 0;
+        if(path.size() != 0) {
+            String trace = "";
+            for(LineSegment edge : path) {
+                trace +=
+                        edge.getPrev().getStationName()
+                                + " ---" + edge.getLine().getName() + "("
+                                + edge.getDuration() + "min)--> ";
+                sum += edge.getDuration();
+            }
+            // last edge needs to get previous and next
+            trace += path.get(path.size()-1).getNext().getStationName();
+            System.out.println(trace);
+            System.out.println("Gesamtzeit: " + sum + "min");
         }
-        System.out.println(path);
+        else System.out.println("No path to destination.");
     }
 
-
-    // can return null?
-    private StationNode getLowestDurationNode(@NotNull HashSet<Station> unsettled_nodes, HashMap<Station, Integer> durations) {
+    /**
+     *
+     * @param unsettled_nodes
+     * @param durations
+     * @return
+     */
+    private StationNode getLowestDurationNode(@NotNull HashSet<Station> unsettled_nodes, @NotNull HashMap<Station, Integer> durations) {
         StationNode lowestDurationNode = null;
         int lowestDuration = Integer.MAX_VALUE;
 
@@ -100,12 +128,19 @@ public class Djikstra {
         return lowestDurationNode;
     }
 
-    private @NotNull Stack<LineSegment> reversePath(@NotNull HashMap<Station, LineSegment> previous, @NotNull Station to) {
+
+    /**
+     *
+     * @param previous
+     * @param to
+     * @return
+     */
+    private @NotNull List<LineSegment> reversePath(@NotNull HashMap<Station, LineSegment> previous, @NotNull Station to) {
         // last segment is null because there is no previous if you reached the start
-        Stack<LineSegment> reversed = new Stack<LineSegment>();
+        LinkedList<LineSegment> reversed = new LinkedList<>();
         LineSegment current = previous.get(to);
         while (current != null) {
-            reversed.push(current);
+            reversed.addFirst(current);
             Station last = current.getPrev();
             current = previous.get(last);
         }
