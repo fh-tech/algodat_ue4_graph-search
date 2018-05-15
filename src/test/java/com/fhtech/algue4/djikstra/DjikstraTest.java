@@ -89,5 +89,11 @@ public class DjikstraTest {
         }
     }
 
+    //TODO: add test with isolated node
+    //TODO: add test with cycle to himself!
+    //TODO: add test with no path to the goal and check output
+    //TODO: add complicated check for shortest path
+    //TODO: add 5 minutes plus for when hop on hop off happens
+
 
 }
