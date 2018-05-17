@@ -9,33 +9,31 @@ Disadvantage bei adjacency list ist halt das man auch nicht so schnell findet ob
 bei einer adjacency matrix findet man das natürlich sehr viel schneller
 
 Data Structures:
-- Graph
+- Graph  
     consists of:
-        -Collection of Nodes
+    - Collection of Nodes
         
-- Nodes
-    consists of:
-        -Station
-        -Collection von Edges
+- Nodes  
+   consists of:
+    - Station
+    - Collection von Edges
     
-- Edges
+- Edges:  
     consists of:
-        -weight
-        -previous
-        -next
-        -Line
-    
+    - weight
+    - previous
+    - next
+    - Line
+
 - Stations
     consists of:
-        -String name
+    - String name
     
-- Line
+- Line  
     consists of:
-        -String name
+    - String name
 
-For type safety reasons we chose to not save the station name on the edge but rather a station object which contains the name. 
-
-
+For type safety reasons we chose to not save the station name as a string on the edge but rather a station object which contains the name. 
 
 
 Algorithm:
