@@ -1,0 +1,37 @@
+package com.fhtech.algue4.djikstra;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.Comparator;
+import static org.junit.jupiter.api.Assertions.*;
+
+class PriorityQueueTest {
+
+    @Test
+    void QueueEnqueueInsertsCorrectly(){
+        PriorityQueue<Integer> queue = new PriorityQueue<>(10, Integer::compareTo);
+
+        queue.enqueue(10);
+        queue.enqueue(9);
+        queue.enqueue(8);
+        queue.enqueue(7);
+        queue.enqueue(6);
+        queue.enqueue(5);
+        queue.enqueue(4);
+        queue.enqueue(3);
+        queue.enqueue(2);
+        queue.enqueue(1);
+
+        assertEquals(1, queue.dequeue().intValue());
+        assertEquals(2, queue.dequeue().intValue());
+        assertEquals(3, queue.dequeue().intValue());
+        assertEquals(4, queue.dequeue().intValue());
+        assertEquals(5, queue.dequeue().intValue());
+        assertEquals(6, queue.dequeue().intValue());
+        assertEquals(7, queue.dequeue().intValue());
+        assertEquals(8, queue.dequeue().intValue());
+        assertEquals(9, queue.dequeue().intValue());
+        assertEquals(10, queue.dequeue().intValue());
+    }
+
+}
