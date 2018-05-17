@@ -1,10 +1,12 @@
 package com.fhtech.algue4.djikstra;
 
+import com.fhtech.algue4.Line;
 import com.fhtech.algue4.Station;
 import com.fhtech.algue4.graph.Graph;
 import com.fhtech.algue4.graph.LineSegment;
 import com.fhtech.algue4.graph.StationNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,10 +21,10 @@ public class Djikstra {
     }
 
     /**
-     *
-     * @param from
-     * @param to
-     * @return
+     * Finds the shortest path from one edge to another
+     * @param from Station you want to start your journey from
+     * @param to Station you want to reach
+     * @return List of edges that need to be traversed where the first entry is the first edge
      */
     @NotNull List<LineSegment> find_Shortest(@NotNull Station from, @NotNull Station to) {
         if (to.equals(from)) throw new IllegalArgumentException("to and from should not be equal!");
@@ -45,6 +47,9 @@ public class Djikstra {
             // remove this node
             unsettled_nodes.remove(currentNode.getStation());
 
+            // we can stop we found the node checking neighbouring edges unnecessary
+            if(currentNode.getStation().equals(to)) break;
+
             for (LineSegment edge : currentNode.getConnectedSegments()) {
                 Station adjacentStation = edge.getNext();
                 // only execute if not in settled_nodes otherwise we add nodes multiple times + updating duration here is unnecessary - cant be shorter (because in settled already shortest possible (because we are always take shortest duration unsettled node next)
@@ -60,10 +65,10 @@ public class Djikstra {
     }
 
     /**
-     *
-     * @param current
-     * @param adjacent
-     * @param edge
+     * Sets new duration to a Station if adjacent Station duration + edge duration is smaller than the current duration to the Station
+     * @param current Station you are currently at
+     * @param adjacent a adjacent station
+     * @param edge the edge
      * @param durations
      * @param previous
      */
@@ -75,8 +80,15 @@ public class Djikstra {
         // new duration to the adjacent node
         int new_dur = dur_current + edge.getDuration();
 
-        LineSegment prev = previous.get(edge.getPrev());
-        if(prev != null && !edge.getLine().equals(prev.getLine())) new_dur += 5;
+        // edge we took to get to current (can be null in case of start node)
+        LineSegment prev = previous.get(current);
+
+        // previous line we traveled on
+        Line prevLine = prev == null ? null : prev.getLine();
+        // the new line we maybe want to travel
+        Line newLine = edge.getLine();
+
+        if(prev != null && !newLine.equals(prevLine)) new_dur += 5;
         if (new_dur < dur_adjacent) {
             durations.put(adjacent, new_dur);
             previous.put(adjacent, edge);
