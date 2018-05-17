@@ -85,9 +85,10 @@ public class Djikstra {
 
         // previous line we traveled on
         Line prevLine = prev == null ? null : prev.getLine();
-        // the new line we maybe want to travel
+        // the new line we will travel
         Line newLine = edge.getLine();
 
+        // if the line we travel changed (hop on hop off) add 5 minutes
         if(prev != null && !newLine.equals(prevLine)) new_dur += 5;
         if (new_dur < dur_adjacent) {
             durations.put(adjacent, new_dur);
@@ -96,11 +97,10 @@ public class Djikstra {
     }
 
     /**
-     *
-     * @param path
-     * @param to
+     * Prints the path on stdout
+     * @param path List<LineSegment> which is result of find_Shortest
      */
-    void printPath(@NotNull List<LineSegment> path, @NotNull Station to) {
+    void printPath(@NotNull List<LineSegment> path) {
         int sum = 0;
         if(path.size() != 0) {
             String trace = "";
@@ -120,10 +120,10 @@ public class Djikstra {
     }
 
     /**
-     *
-     * @param unsettled_nodes
-     * @param durations
-     * @return
+     * get the node with the shortest path
+     * @param unsettled_nodes nodes that can be used next
+     * @param durations current durations for all the nodes
+     * @return StationNode or null if empty
      */
     private StationNode getLowestDurationNode(@NotNull HashSet<Station> unsettled_nodes, @NotNull HashMap<Station, Integer> durations) {
         StationNode lowestDurationNode = null;
@@ -142,10 +142,10 @@ public class Djikstra {
 
 
     /**
-     *
-     * @param previous
-     * @param to
-     * @return
+     * extracts the real path to the Station to
+     * @param previous all the shortest previous edges for the Stations
+     * @param to Station you want to extract the path to
+     * @return List<LineSegment> all edges that need to be traveled to Station to
      */
     private @NotNull List<LineSegment> reversePath(@NotNull HashMap<Station, LineSegment> previous, @NotNull Station to) {
         // last segment is null because there is no previous if you reached the start

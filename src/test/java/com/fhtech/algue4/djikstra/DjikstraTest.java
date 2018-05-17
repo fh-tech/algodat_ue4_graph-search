@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DjikstraTest {
 
 
+    // test simple
     @Test
     void testSimple() {
         Parser p = new Parser();
@@ -47,6 +48,7 @@ public class DjikstraTest {
         }
     }
 
+    //other direction
     @Test
     void test_drive_reversed() {
         Parser p = new Parser();
@@ -75,6 +77,7 @@ public class DjikstraTest {
         }
     }
 
+    // station that does not exist
     @Test
     void test_no_path() {
         Parser p = new Parser();
@@ -93,6 +96,7 @@ public class DjikstraTest {
     }
 
 
+    // to same station
     @Test
     void test_should_throw() {
         Parser p = new Parser();
