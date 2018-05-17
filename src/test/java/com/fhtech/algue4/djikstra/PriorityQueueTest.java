@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PriorityQueueTest {
 
     @Test
-    void QueueEnqueueInsertsCorrectly(){
+    void QueueEnqueueOrdersCorrectly(){
         PriorityQueue<Integer> queue = new PriorityQueue<>(10, Integer::compareTo);
 
         queue.enqueue(10);
@@ -32,6 +32,32 @@ class PriorityQueueTest {
         assertEquals(8, queue.dequeue().intValue());
         assertEquals(9, queue.dequeue().intValue());
         assertEquals(10, queue.dequeue().intValue());
+    }
+
+    @Test
+    void QueueInsertsDuplicates(){
+        PriorityQueue<Double> queue = new PriorityQueue<>();
+
+        queue.enqueue(1.0);
+        queue.enqueue(3.0);
+        queue.enqueue(3.0);
+        queue.enqueue(2.0);
+        queue.enqueue(2.0);
+        queue.enqueue(5.0);
+        queue.enqueue(5.0);
+        queue.enqueue(4.0);
+        queue.enqueue(4.0);
+
+        assertEquals(1.0, queue.dequeue().doubleValue());
+        assertEquals(2.0, queue.dequeue().doubleValue());
+        assertEquals(2.0, queue.dequeue().doubleValue());
+        assertEquals(3.0, queue.dequeue().doubleValue());
+        assertEquals(3.0, queue.dequeue().doubleValue());
+        assertEquals(4.0, queue.dequeue().doubleValue());
+        assertEquals(4.0, queue.dequeue().doubleValue());
+        assertEquals(5.0, queue.dequeue().doubleValue());
+        assertEquals(5.0, queue.dequeue().doubleValue());
+
     }
 
 }
