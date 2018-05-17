@@ -33,6 +33,10 @@ public class PriorityQueue<E> {
         siftUp(e, elements.size() - 1);
     }
 
+    public int size(){
+        return elements.size();
+    }
+
     public E dequeue() {
         if(elements.size() > 1){
             E ret = elements.get(0);
