@@ -29,7 +29,7 @@ public class Parser {
     private List<LineSegment> parseTransportLine(@NotNull String input){
 
         Line l = new Line(input.substring(0, input.indexOf(":")));
-        Matcher matcher = Pattern.compile("\\\"(?<station>.*?)\\\"\\s*(?<duration>\\d)?")
+        Matcher matcher = Pattern.compile("\\\"(?<station>.*?)\\\"\\s*(?<duration>\\d+)?")
                 .matcher(input);
 
         List<LineSegment> segments = new ArrayList<>();
