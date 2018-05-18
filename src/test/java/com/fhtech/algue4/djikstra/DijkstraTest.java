@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DjikstraTest {
+public class DijkstraTest {
 
 
     // test simple
@@ -24,9 +24,9 @@ public class DjikstraTest {
         Station to = new Station("Tulln");
 
         try {
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
 
             String[] station_names_expected = {"Zeiselmauer", "Wipfing", "Tulln"};
             List<String> station_names_real = result
@@ -56,9 +56,9 @@ public class DjikstraTest {
 
         // execute djikstra
         try {
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
 
             String[] station_names_expected = {"Wipfing", "Zeiselmauer", "Muckendorf", "Langenlebarn"};
             List<String> station_names_real = result
@@ -89,9 +89,9 @@ public class DjikstraTest {
 
         // execute djikstra
         try {
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
 
             String[] station_names_expected = {"Muckendorf", "Zeiselmauer", "St.Andrä-Wördern", "Greifenstein-Altenberg", "Höflein/Donau", "Kritzendorf", "Unterkritzendorf", "Kierling", "Weidling", "Nußdorf"};
             List<String> station_names_real = result
@@ -122,9 +122,9 @@ public class DjikstraTest {
 
         // execute djikstra
         try {
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
 
             String[] station_names_expected = {"Muckendorf", "Nußdorf"};
             List<String> station_names_real = result
@@ -155,10 +155,10 @@ public class DjikstraTest {
         Station to = new Station("Schottentor");
 
         try {
-            // execute djikstra
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
             fail("should not get here!");
         } catch (DijkstraException e) {
             assertEquals(e.getMessage(), "The station you want to travel from does not exist.");
@@ -177,10 +177,10 @@ public class DjikstraTest {
         Station to = new Station("a");
 
         try {
-            // execute djikstra
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
             fail("should not get here!");
         } catch (DijkstraException e) {
             assertEquals(e.getMessage(), "The station you want to travel to does not exist.");
@@ -199,10 +199,10 @@ public class DjikstraTest {
         Station to = new Station("non_existent2");
 
         try {
-            // execute djikstra
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
             fail("should not get here!");
         } catch (DijkstraException e) {
             assertEquals(e.getMessage(), "The station you want to travel from does not exist.");
@@ -221,10 +221,10 @@ public class DjikstraTest {
         Station to = new Station("Floridsdorf");
 
         try {
-            // execute djikstra
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
             assertTrue(result.isEmpty());
         } catch (DijkstraException e) {
             assertEquals(e.getMessage(), "Station to and from should not be equal.");
@@ -242,10 +242,10 @@ public class DjikstraTest {
         Station to = new Station("Muckendorf");
 
         try {
-            // execute djikstra
-            Djikstra djikstra = new Djikstra(g);
-            List<LineSegment> result = djikstra.find_Shortest(from, to);
-            djikstra.printPath(result);
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
             assertTrue(result.isEmpty());
         } catch (DijkstraException e) {
             fail("should not get here!");

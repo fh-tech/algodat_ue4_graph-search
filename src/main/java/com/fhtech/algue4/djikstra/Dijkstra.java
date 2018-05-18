@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 
-public class Djikstra {
+public class Dijkstra {
 
     private Graph graph;
 
 
-    public Djikstra(@NotNull Graph graph) {
+    public Dijkstra(@NotNull Graph graph) {
         this.graph = graph;
     }
 
