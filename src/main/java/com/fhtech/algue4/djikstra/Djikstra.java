@@ -33,11 +33,11 @@ public class Djikstra {
         final HashMap<Station, LineSegment> previous = new HashMap<>();
         final HashMap<Station, Integer> durations = new HashMap<>();
         //sets because they need to be unique
-        final HashSet<Station> unsettled_nodes = new HashSet<>();
+        final PriorityQueue<Station> unsettled_nodes = new PriorityQueue<>((s1, s2) -> durations.get(s1).compareTo(durations.get(s2)));
         final HashSet<Station> settled_nodes = new HashSet<>();
 
         //add source to unsettled_nodes
-        unsettled_nodes.add(from);
+        unsettled_nodes.enqueue(from);
         // init path
         durations.put(from, 0);
         previous.put(from, null);
@@ -45,9 +45,7 @@ public class Djikstra {
         //first last is the startNode after that it is the node with the shortest distance from that
         while (unsettled_nodes.size() != 0) {
             // get node with lowest duration - important for dijkstra
-            StationNode currentNode = getLowestDurationNode(unsettled_nodes, durations);
-            // remove this node
-            unsettled_nodes.remove(currentNode.getStation());
+            StationNode currentNode = graph.getStationNode(unsettled_nodes.dequeue());
 
             // we can stop we found the node checking neighbouring edges unnecessary
             if(currentNode.getStation().equals(to)) break;
@@ -58,7 +56,7 @@ public class Djikstra {
                 if (!settled_nodes.contains(adjacentStation)) {
                     update_duration(currentNode.getStation(),adjacentStation, edge, durations, previous);
                     // add all connected nodes to unsettled so we use them here
-                    unsettled_nodes.add(adjacentStation);
+                    unsettled_nodes.enqueue(adjacentStation);
                 }
             }
             settled_nodes.add(currentNode.getStation());
@@ -71,8 +69,8 @@ public class Djikstra {
      * @param current Station you are currently at
      * @param adjacent a adjacent station
      * @param edge the edge
-     * @param durations
-     * @param previous
+     * @param durations the temporary durations for each station
+     * @param previous previous LineSegments for the stations
      */
     private void update_duration(@NotNull Station current, @NotNull Station adjacent, @NotNull LineSegment edge, @NotNull HashMap<Station, Integer> durations, @NotNull HashMap<Station, LineSegment> previous) {
         // actual duration to the current node
@@ -119,27 +117,6 @@ public class Djikstra {
             System.out.println("Gesamtzeit: " + sum + "min");
         }
         else System.out.println("No path to destination.");
-    }
-
-    /**
-     * get the node with the shortest path
-     * @param unsettled_nodes nodes that can be used next
-     * @param durations current durations for all the nodes
-     * @return StationNode or null if empty
-     */
-    private StationNode getLowestDurationNode(@NotNull HashSet<Station> unsettled_nodes, @NotNull HashMap<Station, Integer> durations) {
-        StationNode lowestDurationNode = null;
-        int lowestDuration = Integer.MAX_VALUE;
-
-        for (Station station : unsettled_nodes) {
-            int dur_actual = durations.get(station);
-
-            if (dur_actual < lowestDuration) {
-                lowestDuration = dur_actual;
-                lowestDurationNode = this.graph.getStationNode(station);
-            }
-        }
-        return lowestDurationNode;
     }
 
 
