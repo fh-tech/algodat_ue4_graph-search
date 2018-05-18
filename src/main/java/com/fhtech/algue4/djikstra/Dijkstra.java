@@ -104,18 +104,25 @@ public class Dijkstra {
         int sum = 0;
         if(path.size() != 0) {
             String trace = "";
+            Line last_line = null;
             for(LineSegment edge : path) {
-                trace +=
-                        edge.getPrev().getStationName()
-                                + " ---" + edge.getLine().getName() + "("
-                                + edge.getDuration() + "min)--> ";
-                sum += edge.getDuration();
+                boolean switch_line = false;
+                if (last_line != null && !edge.getLine().equals(last_line)) switch_line = true;
+                trace += "Station: " + edge.getPrev().getStationName() + "\n";
+                if(switch_line) trace += last_line.getName() + "-->" + edge.getLine().getName() + "(+5min)\n";
+                trace += edge.getLine().getName() + "(" + edge.getDuration() + "min)\n";
+
+                // calculate total with switching lines respected
+                sum = switch_line ? sum + edge.getDuration() + 5 : sum + edge.getDuration();
+                //for comparison
+                last_line = edge.getLine();
             }
             // last edge needs to get previous and next
-            trace += path.get(path.size()-1).getNext().getStationName();
+            trace += "Station: " + path.get(path.size()-1).getNext().getStationName();
             System.out.println(trace);
             System.out.println("Gesamtzeit: " + sum + "min");
         }
+        // if the path size is 0 there just is no path
         else System.out.println("No path to destination.");
     }
 

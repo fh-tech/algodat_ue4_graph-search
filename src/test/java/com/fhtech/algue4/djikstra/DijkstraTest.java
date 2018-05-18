@@ -141,7 +141,38 @@ public class DijkstraTest {
         } catch (DijkstraException e) {
             fail("should not get here!");
         }
+    }
 
+    @Test
+    void test_should_hop() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/should_hop.txt"));
+        //have to select start and stop from available stations!
+
+        Station from = new Station("A");
+        Station to = new Station("G");
+
+        // execute djikstra
+        try {
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
+
+            String[] station_names_expected = {"A", "B" , "C", "D", "E", "F", "G"};
+            List<String> station_names_real = result
+                    .stream()
+                    .map((LineSegment l) -> l.getPrev().getStationName())
+                    .collect(Collectors.toList());
+            station_names_real.add(result.get(result.size() - 1).getNext().getStationName());
+
+
+            assertEquals(station_names_expected.length, station_names_real.size());
+            for (int i = 0; i < station_names_expected.length; i++) {
+                assertEquals(station_names_expected[i], station_names_real.get(i));
+            }
+        } catch (DijkstraException e) {
+            fail("should not get here!");
+        }
     }
 
     // station from does not exist
