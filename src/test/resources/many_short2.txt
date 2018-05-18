@@ -1,0 +1,2 @@
+L1: "Muckendorf" 1 "Zeiselmauer" 1 "St.Andrä-Wördern" 1 "Greifenstein-Altenberg" 1 "Höflein/Donau" 1 "Kritzendorf" 1 "Unterkritzendorf" 1 "Kierling" 1 "Weidling" 1 "Nußdorf"
+L2: "Muckendorf" 8 "Nußdorf"

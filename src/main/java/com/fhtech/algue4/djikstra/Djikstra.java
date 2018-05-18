@@ -2,14 +2,13 @@ package com.fhtech.algue4.djikstra;
 
 import com.fhtech.algue4.Line;
 import com.fhtech.algue4.Station;
+import com.fhtech.algue4.errors.DijkstraException;
 import com.fhtech.algue4.graph.Graph;
 import com.fhtech.algue4.graph.LineSegment;
 import com.fhtech.algue4.graph.StationNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class Djikstra {
 
@@ -26,8 +25,11 @@ public class Djikstra {
      * @param to Station you want to reach
      * @return List of edges that need to be traversed where the first entry is the first edge
      */
-    @NotNull List<LineSegment> find_Shortest(@NotNull Station from, @NotNull Station to) {
-        if (to.equals(from)) throw new IllegalArgumentException("to and from should not be equal!");
+    @NotNull List<LineSegment> find_Shortest(@NotNull Station from, @NotNull Station to) throws DijkstraException {
+        if (to.equals(from)) throw new DijkstraException("Station to and from should not be equal.");
+        if(graph.getStationNode(from) == null) throw new DijkstraException("The station you want to travel from does not exist.");
+        if(graph.getStationNode(to) == null) throw new DijkstraException("The station you want to travel to does not exist.");
+
         final HashMap<Station, LineSegment> previous = new HashMap<>();
         final HashMap<Station, Integer> durations = new HashMap<>();
         //sets because they need to be unique
