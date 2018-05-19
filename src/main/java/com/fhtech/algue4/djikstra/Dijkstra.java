@@ -42,13 +42,12 @@ public class Dijkstra {
         durations.put(from, 0);
         previous.put(from, null);
 
-        //first last is the startNode after that it is the node with the shortest distance from that
-        outer: while (unsettled_nodes.size() != 0) {
-            // get node with lowest duration - important for dijkstra
-            Station currentStation = null;
 
+        outer: while (unsettled_nodes.size() != 0) {
+            Station currentStation = null;
             do{
                 if(unsettled_nodes.size() == 0) break outer;
+                // get node with lowest duration from heap
                 currentStation = unsettled_nodes.dequeue();
             } while (settled_nodes.contains(currentStation));
 
@@ -59,10 +58,11 @@ public class Dijkstra {
 
             for (LineSegment edge : currentNode.getConnectedSegments()) {
                 Station adjacentStation = edge.getNext();
-                // only execute if not in settled_nodes otherwise we add nodes multiple times + updating duration here is unnecessary - cant be shorter (because in settled already shortest possible (because we are always take shortest duration unsettled node next)
+                // only execute if not in settled_nodes otherwise we add nodes multiple times + updating duration here is unnecessary
+                // cant be shorter (because in settled already shortest possible (because we are always take shortest duration unsettled node next)
                 if (!settled_nodes.contains(adjacentStation)) {
                     update_duration(currentNode.getStation(),adjacentStation, edge, durations, previous);
-                    // add all connected nodes to unsettled so we use them here
+                    // add all connected nodes to unsettled so we consider them
                     unsettled_nodes.enqueue(adjacentStation);
                 }
             }
