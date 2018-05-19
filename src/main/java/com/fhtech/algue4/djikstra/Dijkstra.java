@@ -25,7 +25,7 @@ public class Dijkstra {
      * @param to Station you want to reach
      * @return List of edges that need to be traversed where the first entry is the first edge
      */
-    @NotNull List<LineSegment> find_Shortest(@NotNull Station from, @NotNull Station to) throws DijkstraException {
+    public @NotNull List<LineSegment> find_Shortest(@NotNull Station from, @NotNull Station to) throws DijkstraException {
         if (to.equals(from)) throw new DijkstraException("Station to and from should not be equal.");
         if(graph.getStationNode(from) == null) throw new DijkstraException("The station you want to travel from does not exist.");
         if(graph.getStationNode(to) == null) throw new DijkstraException("The station you want to travel to does not exist.");
@@ -100,7 +100,7 @@ public class Dijkstra {
      * Prints the path on stdout
      * @param path List<LineSegment> which is result of find_Shortest
      */
-    void printPath(@NotNull List<LineSegment> path) {
+    public void printPath(@NotNull List<LineSegment> path) {
         int sum = 0;
         if(path.size() != 0) {
             String trace = "";
@@ -119,8 +119,9 @@ public class Dijkstra {
             }
             // last edge needs to get previous and next
             trace += "Station: " + path.get(path.size()-1).getNext().getStationName();
+            System.out.println();
             System.out.println(trace);
-            System.out.println("Gesamtzeit: " + sum + "min");
+            System.out.println("Gesamtzeit: " + sum + "min\n");
         }
         // if the path size is 0 there just is no path
         else System.out.println("No path to destination.");
