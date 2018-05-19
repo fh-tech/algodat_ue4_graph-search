@@ -338,7 +338,6 @@ public class DijkstraTest {
         }
     }
 
-    // TODO: find out why it takes forever
     @Test
     void test_random() {
         Parser p = new Parser();
@@ -395,5 +394,4 @@ public class DijkstraTest {
             fail("should not get here!");
         }
     }
-
 }

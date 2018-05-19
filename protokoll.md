@@ -1,5 +1,16 @@
 ## UE4 Dijkstra Algorithm
 
+### Usage
+
+1) clone this project
+2) mvn install
+3) jar can be found in "target/dijkstra"
+3) java -jar dijkstra <absolute path to input file>
+    * if it was a valid input file you will be asked to enter a station you want to start from and a station you want to reach
+    * if the station to, from both exist the shortest path will be searched and displayed
+    * after that you will be asked to enter to and from again
+4) press Ctrl + C to exit the program
+
 
 
 We chose to use a directed graph although not required for the test data for the following reasons:

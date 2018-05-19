@@ -43,4 +43,14 @@ class ParserTest {
         assertNotNull(g.getStationNode(new Station("ßÖ♂aè")));
         assertNotNull(g.getStationNode(new Station(" ")));
     }
+
+    @Test
+    void weirdFormatFile() {
+        Graph g = new Parser().readFile(this.getClass().getResourceAsStream("/stations_weird.txt"));
+        Graph g2 = new Parser().readFile(this.getClass().getResourceAsStream("/stations.txt"));
+
+        assertEquals(g.size(), g2.size());
+        assertTrue(g.get_stations().containsAll(g2.get_stations()));
+        assertTrue(g2.get_stations().containsAll(g.get_stations()));
+    }
 }
