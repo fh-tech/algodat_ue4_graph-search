@@ -27,12 +27,12 @@ public class Parser {
 
     @NotNull
     private List<LineSegment> parseTransportLine(@NotNull String input){
+        List<LineSegment> segments = new ArrayList<>();
+        if(input.isEmpty()) return segments;
 
         Line l = new Line(input.substring(0, input.indexOf(":")));
         Matcher matcher = Pattern.compile("\\\"(?<station>.*?)\\\"\\s*(?<duration>\\d+)?")
                 .matcher(input);
-
-        List<LineSegment> segments = new ArrayList<>();
 
         matcher.find();
         while(!matcher.hitEnd()){
