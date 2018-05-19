@@ -338,4 +338,62 @@ public class DijkstraTest {
         }
     }
 
+    // TODO: find out why it takes forever
+    @Test
+    void test_random() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        //have to select start and stop from available stations!
+
+        Station from = new Station("Doeblinger Hptstrasse/Gatterburgg.");
+        Station to = new Station("Columbusplatz");
+
+        try {
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
+        } catch (DijkstraException e) {
+            fail("should not get here!");
+        }
+    }
+
+    @Test
+    void test_random2() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        //have to select start and stop from available stations!
+
+        Station from = new Station("Leberberg");
+        Station to = new Station("Vorgartenstrasse");
+
+        try {
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
+        } catch (DijkstraException e) {
+            fail("should not get here!");
+        }
+    }
+
+    @Test
+    void test_random3() {
+        Parser p = new Parser();
+        Graph g = p.readFile(getClass().getResourceAsStream("/stations.txt"));
+        //have to select start and stop from available stations!
+
+        Station from = new Station("Bruennlbadgasse");
+        Station to = new Station("Ottakring");
+
+        try {
+            // execute dijkstra
+            Dijkstra dijkstra = new Dijkstra(g);
+            List<LineSegment> result = dijkstra.find_Shortest(from, to);
+            dijkstra.printPath(result);
+        } catch (DijkstraException e) {
+            fail("should not get here!");
+        }
+    }
+
 }
