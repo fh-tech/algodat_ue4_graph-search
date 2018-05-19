@@ -42,7 +42,6 @@ public class Dijkstra {
         durations.put(from, 0);
         previous.put(from, null);
 
-
         outer: while (unsettled_nodes.size() != 0) {
             Station currentStation = null;
             do{
@@ -51,10 +50,10 @@ public class Dijkstra {
                 currentStation = unsettled_nodes.dequeue();
             } while (settled_nodes.contains(currentStation));
 
-            final StationNode currentNode = graph.getStationNode(currentStation);
-
             // we can stop we found the node checking neighbouring edges unnecessary
-            if(currentNode.getStation().equals(to)) break;
+            if(currentStation.equals(to)) break;
+
+            final StationNode currentNode = graph.getStationNode(currentStation);
 
             for (LineSegment edge : currentNode.getConnectedSegments()) {
                 Station adjacentStation = edge.getNext();
@@ -114,21 +113,29 @@ public class Dijkstra {
             Line last_line = null;
             for(LineSegment edge : path) {
                 boolean switch_line = false;
-                if (last_line != null && !edge.getLine().equals(last_line)) switch_line = true;
-                trace += "Station: " + edge.getPrev().getStationName() + "\n";
-                if(switch_line) trace += last_line.getName() + "-->" + edge.getLine().getName() + "(+5min)\n";
-                trace += edge.getLine().getName() + "(" + edge.getDuration() + "min)\n";
+                Line currentLine = edge.getLine();
+                if (!currentLine.equals(last_line)) switch_line = true;
+
+                if(switch_line) {
+                    if(last_line != null) {
+                        trace += edge.getPrev().getStationName() + "\n\t + 5min";
+                    }
+                    trace += "\n" + currentLine.getName() + ": ";
+
+                }
+                trace += edge.getPrev().getStationName() + " --" + edge.getDuration() + "--> ";
 
                 // calculate total with switching lines respected
                 sum = switch_line ? sum + edge.getDuration() + 5 : sum + edge.getDuration();
                 //for comparison
                 last_line = edge.getLine();
             }
+            sum-=5;
             // last edge needs to get previous and next
-            trace += "Station: " + path.get(path.size()-1).getNext().getStationName();
+            trace += path.get(path.size()-1).getNext().getStationName();
             System.out.println();
             System.out.println(trace);
-            System.out.println("Gesamtzeit: " + sum + "min\n");
+            System.out.println("Gesamtzeit: " + sum + "min");
         }
         // if the path size is 0 there just is no path
         else System.out.println("No path to destination.");
