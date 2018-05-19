@@ -43,9 +43,16 @@ public class Dijkstra {
         previous.put(from, null);
 
         //first last is the startNode after that it is the node with the shortest distance from that
-        while (unsettled_nodes.size() != 0) {
+        outer: while (unsettled_nodes.size() != 0) {
             // get node with lowest duration - important for dijkstra
-            StationNode currentNode = graph.getStationNode(unsettled_nodes.dequeue());
+            Station currentStation = null;
+
+            do{
+                if(unsettled_nodes.size() == 0) break outer;
+                currentStation = unsettled_nodes.dequeue();
+            } while (settled_nodes.contains(currentStation));
+
+            final StationNode currentNode = graph.getStationNode(currentStation);
 
             // we can stop we found the node checking neighbouring edges unnecessary
             if(currentNode.getStation().equals(to)) break;
