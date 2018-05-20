@@ -26,7 +26,7 @@ public class ApiController {
     @RequestMapping(value = "name", params = {"station"})
     List<Station> autoCompleteStationNames(@RequestParam(name = "station") String incompleteStationName){
         return state
-                .getStationsMatching((station -> station.getStationName().startsWith(incompleteStationName)))
+                .getStationsMatching((station -> station.getStationName().toLowerCase().startsWith(incompleteStationName.toLowerCase())))
                 .collect(Collectors.toList());
     }
 

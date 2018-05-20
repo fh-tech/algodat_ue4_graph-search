@@ -1,10 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Graph Search</title>
-</head>
-<body>
-    <h1>Search Graphs!</h1>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="authors" content="Viktor Leher, Daniel Kudernatsch">
+        <meta name="description" content="Simple UI for Dijkstra">
+        <meta name=“robots” content=“all”>
+        <meta name="language" content="english">
+        <link rel="shortcut icon" href=""/>
+        <title>Dijkstra</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+              integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+              crossorigin="anonymous">
+        <link rel="stylesheet" title="standard-style" href="dijkstra.css" type="text/css">
+
+    </head>
+    <body>
+        <h1 class="text-center mb-5">Shortest path search with dijkstra</h1>
+
+        <div class="container">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend station_input_desc">
+                    <span class="input-group-text" id="station_from_text">From:</span>
+                </div>
+                <input type="text" id="station_from" list="from_list" class="form-control" placeholder="Schottentor" aria-label="station_from_text" aria-describedby="station_from_text">
+                <datalist id="from_list"></datalist>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend station_input_desc">
+                    <span class="input-group-text" id="station_to_text">To:</span>
+                </div>
+                <input type="text" id="station_to" class="form-control" list="to_list" placeholder="Handelskai" aria-label="station_to_text" aria-describedby="station_to_text">
+                <datalist id="to_list"></datalist>
+            </div>
+        </div>
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+                integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+                integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+                crossorigin="anonymous"></script>
+        <script src="dijkstra.js"></script>
+    </body>
+
 </html>
