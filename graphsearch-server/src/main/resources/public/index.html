@@ -19,25 +19,31 @@
     <body>
         <h1 class="text-center mb-5">Shortest path search with dijkstra</h1>
 
-        <div class="container">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend station_input_desc">
-                    <span class="input-group-text" id="station_from_text">From:</span>
+        <form id="dijkstra_form">
+            <div class="container">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend station_input_desc">
+                        <span class="input-group-text" id="station_from_text">From:</span>
+                    </div>
+                    <input type="text" name="station_from" id="station_from" list="from_list" required class="form-control" placeholder="Schottentor" aria-label="station_from_text" aria-describedby="station_from_text">
+                    <datalist id="from_list"></datalist>
                 </div>
-                <input type="text" id="station_from" list="from_list" class="form-control" placeholder="Schottentor" aria-label="station_from_text" aria-describedby="station_from_text">
-                <datalist id="from_list"></datalist>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend station_input_desc">
+                        <span class="input-group-text" id="station_to_text">To:</span>
+                    </div>
+                    <input type="text" name="station_to" id="station_to" class="form-control" list="to_list" required placeholder="Handelskai" aria-label="station_to_text" aria-describedby="station_to_text">
+                    <datalist id="to_list"></datalist>
+                </div>
+                <button class="btn btn-primary" type="submit">Search Path</button>
             </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend station_input_desc">
-                    <span class="input-group-text" id="station_to_text">To:</span>
-                </div>
-                <input type="text" id="station_to" class="form-control" list="to_list" placeholder="Handelskai" aria-label="station_to_text" aria-describedby="station_to_text">
-                <datalist id="to_list"></datalist>
+        </form>
+
+        <div class="container">
+            <div class="row" id="result">
+
             </div>
         </div>
-
-
-
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
                 integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
