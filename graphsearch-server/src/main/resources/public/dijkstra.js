@@ -13,8 +13,13 @@ $(document).ready(function () {
         e.preventDefault();
         let from = e.target.elements["station_from"].value;
         let to = e.target.elements["station_to"].value;
-        let path = await find_shortest(from, to);
-        showPath(path);
+        let path;
+        try {
+            path = await find_shortest(from, to);
+            showPath(path);
+        } catch(e) {
+            showErrorMessage(path.message);
+        }
     })
 });
 
@@ -51,6 +56,8 @@ function showPath(path) {
     let lastLine = null;
     let sumTime = 0;
 
+    // clean current content
+    cleanResult();
     for(let segment of path) {
         addStationCol(segment.prev.stationName, container);
 
@@ -92,4 +99,25 @@ function addLineDurCol(duration, line, lastLine, container) {
     contain.append(line_dur);
     col.append(contain);
     container.append(col);
+}
+
+function showErrorMessage(message) {
+    // cleans current contents
+    cleanResult();
+    let container = $("#result");
+    let col = $("<div>", {"class": "col-12 my-2"});
+    let contain = $("<div>", {"class": "path_contain text-center"});
+    let fail = $("<span>", {"class": "font-weight-bold text-danger"}).text(message);
+    contain.append(fail);
+    col.append(contain);
+    container.append(col);
+}
+
+//cleans current content of result
+function cleanResult() {
+    // TODO: would be interesting why i sometimes need [0] sometimes not
+    let container = $("#result")[0];
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
 }
