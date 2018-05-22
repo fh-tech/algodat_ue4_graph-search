@@ -58,6 +58,9 @@ The file format allows us to do this because 2 **different** Stations can never 
     - HashMap<Station, StationNode> 
         
 #### Dijkstra
+
+Worst case: O(E + V log (V) )   E...Edge count, V...Vertcies count
+
 ```Java
     if(to.equals(from)) throw new DijkstraException("Station to and from should not be equal.");
     if(graph.getStationNode(from) == null) throw new DijkstraException("The station you want to travel from does not exist.");
