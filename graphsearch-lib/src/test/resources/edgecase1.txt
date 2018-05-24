@@ -1,0 +1,4 @@
+U2: "Schottentor" 2 "Schottenring" 1 "Taborstrasse"
+U4: "Spittelau" 1 "Friedensbruecke" 1 "Rossauerlaende" 2 "Schottenring"
+U6: "Handelskai" 1 "Dresdner Strasse" 2 "Jaegerstrasse" 1 "Spittelau"
+2: "Taborstrasse" 2 "Taborstrasse/Heinestrasse" 1 "Am Tabor" 1 "Rebhanngasse" 1 "Innstrasse" 1 "Traisengasse" 2 "Dresdner Strasse"

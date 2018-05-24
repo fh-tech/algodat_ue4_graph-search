@@ -6,13 +6,42 @@ import com.fhtech.algue4.Station;
 import com.fhtech.algue4.errors.DijkstraException;
 import com.fhtech.algue4.graph.Graph;
 import com.fhtech.algue4.graph.LineSegment;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.*;
 
 public class DijkstraTest {
 
+
+    @Test
+    void shouldPassEdgeCaseShottentorHandelskai() throws Exception{
+        Graph g = new Parser().readFile(getClass().getResourceAsStream("/edgecase1.txt"));
+
+        Station from = new Station("Schottentor");
+        Station to   = new Station("Handelskai");
+
+        List<LineSegment> ret = new Dijkstra(g).find_Shortest(from, to);
+
+        List<Station> path = ret
+                .stream()
+                .map(LineSegment::getNext)
+                .collect(Collectors.toList());
+
+        assertEquals(Arrays.asList(
+                new Station("Schottenring"),
+                new Station("Rossauerlaende"),
+                new Station("Friedensbruecke"),
+                new Station("Spittelau"),
+                new Station("Jaegerstrasse"),
+                new Station("Dresdner Strasse"),
+                new Station("Handelskai")
+        ), path);
+    }
 
     // test simple
     @Test
