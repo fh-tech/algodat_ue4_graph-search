@@ -19,6 +19,17 @@ public class DijkstraTest {
 
 
     @Test
+    void testNewVersion() throws Exception {
+        Graph g = new Parser().readFile(getClass().getResourceAsStream("/testNewVersion.txt"));
+        Station from = new Station("A");
+        Station to   = new Station("F");
+
+        List<LineSegment> path = new Dijkstra(g).find_Shortest(from, to);
+
+        assertEquals(1,1);
+    }
+
+    @Test
     void shouldPassEdgeCaseShottentorHandelskai() throws Exception{
         Graph g = new Parser().readFile(getClass().getResourceAsStream("/edgecase1.txt"));
 
@@ -41,6 +52,26 @@ public class DijkstraTest {
                 new Station("Dresdner Strasse"),
                 new Station("Handelskai")
         ), path);
+    }
+
+    @Test
+    void shouldPassEdgeCaseAspernSiebenhirten() throws Exception{
+        Graph g = new Parser().readFile(getClass().getResourceAsStream("/stations.txt"));
+
+        Station from = new Station("Aspernstrasse");
+        Station to   = new Station("Siebenhirten");
+
+        List<LineSegment> ret = new Dijkstra(g).find_Shortest(from, to);
+
+        int duration = 0;
+        Line last = null;
+        for(LineSegment edge : ret) {
+            duration += edge.getDuration();
+            if(last != null && !(last == edge.getLine())) duration += 5;
+            last = edge.getLine();
+        }
+
+        assertEquals(52, duration);
     }
 
     // test simple
@@ -196,7 +227,7 @@ public class DijkstraTest {
                 if(last != null && !(last == edge.getLine())) duration += 5;
                 last = edge.getLine();
             }
-            assertEquals(duration, 43);
+            assertEquals(43, duration);
 
             // check for correct stations traversed
             String[] station_names_expected = {"A", "B" , "C", "D", "E", "F", "G"};
