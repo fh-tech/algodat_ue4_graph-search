@@ -71,7 +71,7 @@ public class DijkstraTest {
             last = edge.getLine();
         }
 
-        assertEquals(52, duration);
+        assertEquals(51, duration);
     }
 
     // test simple
@@ -227,7 +227,7 @@ public class DijkstraTest {
                 if(last != null && !(last == edge.getLine())) duration += 5;
                 last = edge.getLine();
             }
-            assertEquals(43, duration);
+            assertEquals(39, duration);
 
             // check for correct stations traversed
             String[] station_names_expected = {"A", "B" , "C", "D", "E", "F", "G"};
