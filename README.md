@@ -4,8 +4,9 @@
 
 1) clone this project  
 2) mvn install  
-3) jar can be found in "graphsearch-cli/target/dijkstra"  
-3) java -jar dijkstra <absolute path to input file>  
+3) jar for the CLI program can be found in "graphsearch-cli/target/*.jar"
+   - jar for Spring Frontend can be found in "graphsearch-server/target/*.jar" -- server runs on localhost:8080
+3) cli can be used like: `java -jar dijkstra <absolute path to input file>`  
     * if it was a valid input file you will be asked to enter a station you want to start from and a station you want to reach
     * if the station to, from both exist the shortest path will be searched and displayed
     * after that you will be asked to enter to and from again
@@ -70,57 +71,55 @@ First of the Station to and from will be checked:
 
 Dijkstra`s Algorithm needs the following data structures:
 ```Java
-    final HashMap<Station, LineSegment> previous = new HashMap<>();
-    final HashMap<Station, Integer> durations = new HashMap<>();
-    final PriorityQueue<Station> unsettled_nodes = new PriorityQueue<>((s1, s2) -> durations.get(s1).compareTo(durations.get(s2)));
-    final HashSet<Station> settled_nodes = new HashSet<>();
+     final HashMap<StationFromLine, LineSegmentFromLine> previous = new HashMap<>();
+     final HashMap<StationFromLine, Integer> durations = new HashMap<>();
+     final Set<StationFromLine> settled = new HashSet<>();
+     final PriorityQueue<StationFromLine> unsettled = new PriorityQueue<>(Comparator.comparing(durations::get));
 ```
  - unsettled nodes (nodes we found connections to)
     * we used PriorityQueue<Station>
  - settled nodes (nodes we already considered)
-    * we used HashSet<Station> because we only want to check if a StationNode is already contained or not
+    * we used HashSet<StationFromLine> because we only want to check if a StationNode is already contained or not
     * we have to do many checks if something is contained so searching should be fast -- a Hashtable is a good choice with O(1) random access
  - previous LineSegments
-    * we used HashMap<Station, LineSegment> previous
-    * as our "indexing" works via Stations we use a HashMap
+    * we used HashMap<StationFromLine, LineSegment> previous
+    * as our "indexing" works easily via StationFromLine we use a HashMap
  - durations to the StationNodes that we visited
-    * we used HashMap<Station, Integer> durations
-    * as our "indexing" works via Stations we use a HashMap
+    * we used HashMap<StationFromLine, Integer> durations
     
 ```Java
-    unsettled_nodes.enqueue(from);
-    durations.put(from, 0);
-    previous.put(from, null);
+    previous.put(new StationFromLine(from, null), null);
+    durations.put(new StationFromLine(from, null), 0);
+    unsettled.enqueue(new StationFromLine(from, null));
 ```
-To start of we need to add the start-Station to the unsettled nodes. Furthermore we need to set the duration to 0
-and the previous Segment to null because there is none for the starting point.
+To start of we need to:
+* add the start-Station to the unsettled nodes
+* set the duration to 0
+* the previous StationFromLine to null as there is none for the starting point
 
 ```Java
-outer: while (unsettled_nodes.size() != 0) {
-    Station currentStation = null;
+outer: while (unsettled.size() > 0){
+    StationFromLine current;
     do{
-        if(unsettled_nodes.size() == 0) break outer;
+        if(unsettled.size() == 0) break outer;
         // get node with lowest duration from heap
-        currentStation = unsettled_nodes.dequeue();
-    } while (settled_nodes.contains(currentStation));
+        current = unsettled.dequeue();
+    } while (settled.contains(current));
 
-    // we can stop we found the node checking neighbouring edges unnecessary
-    if(currentStation.equals(to)) break;
-    final StationNode currentNode = graph.getStationNode(currentStation);
+    if(current.station.equals(to)) break;
 
-    for (LineSegment edge : currentNode.getConnectedSegments()) {
-        Station adjacentStation = edge.getNext();
-        // only execute if not in settled_nodes otherwise we add nodes multiple times + updating duration here is unnecessary
-        // cant be shorter (because in settled already shortest possible (because we are always take shortest duration unsettled node next)
-        if (!settled_nodes.contains(adjacentStation)) {
-            update_duration(currentNode.getStation(),adjacentStation, edge, durations, previous);
-            // add all connected nodes to unsettled so we consider them
-            unsettled_nodes.enqueue(adjacentStation);
+    for (LineSegment nextSegment: graph.getStationNode(current.getStation()).getConnectedSegments()){
+        StationFromLine next = new StationFromLine(nextSegment.getNext(), nextSegment.getLine());
+        if(!settled.contains(next)){
+            updateDuration(current, nextSegment, durations, previous);
+            unsettled.enqueue(next);
         }
     }
-    settled_nodes.add(currentNode.getStation());
+    settled.add(current);
 }
-return reversePath(previous, to);
+
+return reversePath(previous, durations, to);
+
 ```
 We have to keep going until there are no unsettled nodes left anymore (note at start we have only the start node).
 The node with the highest priority is fetched from the heap. If the fetched Station is already in the
@@ -132,16 +131,26 @@ A drawback of this is that we can have duplicates and the unsettled nodes can co
 settled nodes.
 
 If the selected station equals the Station we want to travel to we are done.  
-With the highest priority Station we get the corresponding node in the graph. This will be our new currentNode.
-Now we have to calculate the duration to the connected nodes by visiting all edges associated with the currentNode.  
+With the highest priority Station we get the corresponding node in the graph.
+Now we have to calculate the duration to the connected nodes by visiting all edges associated with the current StationFromLine.  
 If the duration is shorter we have to update it otherwise leave it be. We also have to add all connected nodes to the 
-unsettled nodes and our currentNode to the settled nodes.
+unsettled nodes and our current StationFromLine to the settled nodes.
 
 The algorithm breaks if:
 * the currentStation is the one we want to find
 * unsettledNodes is empty (no path to the node) 
 
 At the end we return the reversed path to the Station.
+
+#### Switching Penalty (hop on hop off)
+In order to find the shortest path while considering extra time for changing the line one travels on the easiest solution would be to 
+just duplicate each station for every line connected to it and add new connections in between them with the penalty duration.
+As this would greatly increase the graph size and hence the algorithm run time we wanted to avoid that. So we did the following:
+
+We remember not only what the previous LineSegment was but also with which line we got there. By doing that we can differentiate between 
+two paths leading to a station that just differ Line-wise. Otherwise a path that is shorter till this point will take priority over another
+which is shorter in the long run, as the Station would already be in the settled nodes and would not be considered anymore.
+
 
 #### Priority Queue
 The priority queue is implemented using a flat heap structure. To calculate the priority we use a Java comparator which 
