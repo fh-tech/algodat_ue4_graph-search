@@ -95,6 +95,38 @@ public class Dijkstra {
      * @param path List<LineSegment> which is result of find_Shortest
      */
     public void printPath(@NotNull List<LineSegment> path) {
+        int sum = 0;
+        if(path.size() != 0) {
+            StringBuilder trace = new StringBuilder();
+            Line last_line = null;
+            for(LineSegment edge : path) {
+                boolean switch_line = false;
+                Line currentLine = edge.getLine();
+                if (!currentLine.equals(last_line)) switch_line = true;
+
+                if(switch_line) {
+                    if(last_line != null) {
+                        trace.append(edge.getPrev().getStationName()).append("\n\t + 5min");
+                    }
+                    trace.append("\n").append(currentLine.getName()).append(": ");
+
+                }
+                trace.append(edge.getPrev().getStationName()).append(" --").append(edge.getDuration()).append("--> ");
+
+                // calculate total with switching lines respected
+                sum = switch_line ? sum + edge.getDuration() + 5 : sum + edge.getDuration();
+                //for comparison
+                last_line = edge.getLine();
+            }
+            sum-=5;
+            // last edge needs to get previous and next
+            trace.append(path.get(path.size() - 1).getNext().getStationName());
+            System.out.println();
+            System.out.println(trace);
+            System.out.println("Gesamtzeit: " + sum + "min");
+        }
+        // if the path size is 0 there just is no path
+        else System.out.println("No path to destination.");
     }
 
 
